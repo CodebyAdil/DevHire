@@ -1,11 +1,13 @@
 import express from 'express';
 import authRoutes from './features/auth/auth.routes.js';
 import { notFound, errorHandler } from './middleware/error.middleware.js';
+import jobRoutes from './features/jobs/job.routes.js';
 
 const app = express();
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
 
 
 app.use(notFound);
