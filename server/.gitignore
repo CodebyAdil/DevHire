@@ -83,3 +83,8 @@ coverage/
 *.db
 .eslintcache
 .stylelintcache
+
+
+CLAUDE.md
+PROJECT_SPEC.md
+TASKS.md

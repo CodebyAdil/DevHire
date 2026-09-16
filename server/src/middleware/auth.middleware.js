@@ -1,5 +1,5 @@
 import * as authService from '../features/auth/auth.service.js';
-import { AppError } from '../../utils/AppError.js';
+import { AppError } from '../utils/AppError.js';
 
 /**
  * `protect` — verifies the JWT on incoming requests and attaches the

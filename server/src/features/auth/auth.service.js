@@ -11,7 +11,9 @@ import { AppError } from '../../utils/AppError.js';
  * easy to swap later (e.g. bcrypt -> argon2) without touching routes.
  */
 
-const SALT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS || 10;
+const SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
+
+//console.log('SALT_ROUNDS:', typeof SALT_ROUNDS);
 
 export async function hashPassword(plainPassword) {
   return bcrypt.hash(plainPassword, SALT_ROUNDS);
