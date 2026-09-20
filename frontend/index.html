@@ -4,7 +4,32 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta
+      name="theme-color"
+      content="#f7f7fb"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1a1a24"
+      media="(prefers-color-scheme: dark)"
+    />
+    <!--
+      Apply the persisted/OS theme before first paint to prevent a flash of the
+      wrong theme. Kept in sync afterward by the useTheme hook.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('devhire-theme');
+          var isDark =
+            stored === 'dark' ||
+            (!stored &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
     <meta
       name="description"
       content="DevHire — AI-assisted recruiting. Post jobs, screen resumes, and surface ranked candidate shortlists."
