@@ -1,8 +1,9 @@
 import * as candidateService from './candidate.service.js';
 
 /**
- * `req.job` is already attached by `requireJobAccess`, so we don't need
- * to re-fetch or re-check ownership here — just use req.job._id / req.params.jobId.
+ * NOTE: supersedes Phase 4's candidate.controller.js — has everything from
+ * Phase 4 plus the two new scoring handlers at the bottom. Replace the
+ * whole file rather than merging by hand.
  */
 
 export async function upload(req, res, next) {
@@ -12,9 +13,6 @@ export async function upload(req, res, next) {
       files: req.files,
     });
 
-    // 201 if at least one succeeded, 207-style partial info either way —
-    // sticking with 201 (simpler for the frontend) but always returning
-    // both arrays so the UI can show "3 uploaded, 1 failed: reason".
     res.status(201).json({
       created,
       failed,
@@ -42,3 +40,26 @@ export async function getOne(req, res, next) {
     next(err);
   }
 }
+
+/** POST /api/jobs/:jobId/candidates/:id/score */
+export async function score(req, res, next) {
+  try {
+    const candidate = await candidateService.scoreCandidate(req.params.id, req.job);
+    res.status(200).json({ candidate });
+  } catch (err) {
+    next(err); // candidate is already marked 'failed' in the service before this fires
+  }
+}
+
+/** POST /api/jobs/:jobId/candidates/score-all */
+export async function scoreAll(req, res, next) {
+  try {
+    const results = await candidateService.scoreAllUnscoredCandidates(req.job);
+    res.status(200).json({
+      ...results,
+      summary: `${results.scored.length} scored, ${results.failed.length} failed`,
+    });
+  } catch (err) {
+    next(err);
+  }
+} 
