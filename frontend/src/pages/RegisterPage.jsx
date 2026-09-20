@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { AuthLayout } from '../components/AuthLayout.jsx';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '../components/ui/card.jsx';
+import { Button } from '../components/ui/button.jsx';
+import { Input } from '../components/ui/input.jsx';
+import { Label } from '../components/ui/label.jsx';
+import { ErrorState } from '../components/ui/states.jsx';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -27,35 +40,70 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="auth-page">
-      <form onSubmit={handleSubmit} className="card">
-        <h1>Create a recruiter account</h1>
-        {error && <p className="error-text">{error}</p>}
-        <label>
-          Name
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={8}
-            required
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating account…' : 'Register'}
-        </button>
-        <p>
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
-      </form>
-    </div>
+    <AuthLayout>
+      <Card className="mx-auto w-full max-w-md shadow-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Create a recruiter account</CardTitle>
+          <CardDescription>
+            Start posting jobs and screening candidates in minutes.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <ErrorState message={error} />}
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
+                placeholder="Jane Recruiter"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                placeholder="you@company.com"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                placeholder="At least 8 characters"
+                minLength={8}
+                required
+              />
+            </div>
+            <Button type="submit" size="lg" className="w-full" disabled={loading}>
+              <UserPlus className="size-4" aria-hidden="true" />
+              {loading ? 'Creating account…' : 'Register'}
+            </Button>
+            <p className="pt-1 text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="font-semibold text-primary underline-offset-4 hover:underline"
+              >
+                Log in
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
+    </AuthLayout>
   );
 }
