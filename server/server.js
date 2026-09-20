@@ -1,14 +1,20 @@
-import dns from 'dns';
-dns.setServers(['8.8.8.8']);
+import dotenv from "dotenv/config.js";
+import app from "./src/app.js";
+import connectDB from "./src/config/db.js";
 
-import dotenv from 'dotenv/config.js';
-import app from './src/app.js';
-import connectDB from './src/config/db.js';
+const PORT = process.env.PORT || 5000;
 
+async function start() {
+  try {
+    await connectDB();
 
-connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  }
+}
 
-
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
-})
+start();
